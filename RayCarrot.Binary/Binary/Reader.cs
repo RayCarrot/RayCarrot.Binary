@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace RayCarrot.Binary
@@ -172,12 +173,18 @@ namespace RayCarrot.Binary
             // Get the string from the bytes using the specified encoding
             var str = encoding.GetString(bytes);
 
-            // Get first null character
-            var nullIndex = str.IndexOf((char)0x00);
+            // Enumerate every character
+            for (int i = 0; i < str.Length; i++)
+            {
+                // If null and all following characters are null...
+                if (str[i] == 0x00 && str.Substring(i).All(x => x == 0x00))
+                {
+                    // Remove null characters
+                    str = str.Remove(i);
 
-            if (nullIndex != -1)
-                // Remove null characters
-                str = str.Remove(nullIndex);
+                    break;
+                }
+            }
 
             // Return the string
             return str;
