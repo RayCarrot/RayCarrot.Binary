@@ -149,7 +149,8 @@ namespace RayCarrot.Binary
         {
             var data = buffer;
 
-            CurrentChecksumCalculator?.AddBytes(data);
+            if (CurrentChecksumCalculator?.CalculateForDecryptedData == true)
+                CurrentChecksumCalculator?.AddBytes(data);
 
             if (CurrentXORKey != 0)
             {
@@ -162,6 +163,9 @@ namespace RayCarrot.Binary
                     data[i] = (byte)(data[i] ^ CurrentXORKey);
             }
 
+            if (CurrentChecksumCalculator?.CalculateForDecryptedData == false)
+                CurrentChecksumCalculator?.AddBytes(data);
+
             base.Write(data);
         }
 
@@ -169,10 +173,14 @@ namespace RayCarrot.Binary
         {
             byte data = value;
 
-            CurrentChecksumCalculator?.AddByte(data);
-
+            if (CurrentChecksumCalculator?.CalculateForDecryptedData == true)
+                CurrentChecksumCalculator?.AddByte(value);
+            
             if (CurrentXORKey != 0)
                 data = (byte)(data ^ CurrentXORKey);
+
+            if (CurrentChecksumCalculator?.CalculateForDecryptedData == false)
+                CurrentChecksumCalculator?.AddByte(value);
 
             base.Write(data);
         }
