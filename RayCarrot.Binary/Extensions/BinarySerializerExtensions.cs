@@ -59,5 +59,20 @@ namespace RayCarrot.Binary
             // Return as a boolean
             return serializedByteValue == 1;
         }
+
+        /// <summary>
+        /// Performs an xor operation on the bytes serialized during the specified action
+        /// </summary>
+        /// <param name="s">The serializer</param>
+        /// <param name="xorKey">The xor key to use</param>
+        /// <param name="action">The action</param>
+        public static void DoXOR(this IBinarySerializer s, byte xorKey, Action action)
+        {
+            s.BeginXOR(xorKey);
+
+            action?.Invoke();
+
+            s.EndXOR();
+        }
     }
 }
