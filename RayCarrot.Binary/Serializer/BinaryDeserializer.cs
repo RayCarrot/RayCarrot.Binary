@@ -96,10 +96,12 @@ namespace RayCarrot.Binary
         /// <returns>The serialized value</returns>
         public T Serialize<T>(T value, string name = null)
         {
+            var logPrefix = LogPrefix;
+
             // Read and cast the value
             var v = (T)Read<T>();
 
-            Logger?.WriteLogLine($"{LogPrefix}({typeof(T)}) {name ?? "<no name>"}: {v}");
+            Logger?.WriteLogLine($"{logPrefix}({typeof(T)}) {name ?? "<no name>"}: {v}");
 
             return v;
         }
@@ -117,9 +119,11 @@ namespace RayCarrot.Binary
             // Use byte reading method if it's a byte array
             if (typeof(T) == typeof(byte))
             {
+                var logPrefix = LogPrefix;
+
                 byte[] bytes = Reader.ReadBytes(length);
 
-                string normalLog = $"{LogPrefix}({typeof(T)}[{length}]) {name ?? "<no name>"}: ";
+                string normalLog = $"{logPrefix}({typeof(T)}[{length}]) {name ?? "<no name>"}: ";
                 Logger?.WriteLogLine($"{normalLog}{BinaryHelpers.ByteArrayToHexString(bytes, 16, new string(' ', normalLog.Length))}");
 
                 return (T[])(object)bytes;
@@ -178,10 +182,12 @@ namespace RayCarrot.Binary
         /// <returns>The serialized string value</returns>
         public string SerializeString(string value, int length, string name = null)
         {
+            var logPrefix = LogPrefix;
+
             // Read the string from the reader
             var v = Reader.ReadString(length, Settings.StringEncoding);
 
-            Logger?.WriteLogLine($"{LogPrefix}(string) {name ?? "<no name>"}: {v}");
+            Logger?.WriteLogLine($"{logPrefix}(string) {name ?? "<no name>"}: {v}");
 
             return v;
         }
