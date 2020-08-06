@@ -16,7 +16,8 @@ namespace RayCarrot.Binary
         /// </summary>
         /// <param name="stream">The stream to write to</param>
         /// <param name="endian">The endianness to use when writing</param>
-        public Writer(Stream stream, Endian endian) : base(stream)
+        /// <param name="leaveOpen">Indicates if the stream should be left open after disposing the writer</param>
+        public Writer(Stream stream, Endian endian, bool leaveOpen = false) : base(stream, Encoding.Default, leaveOpen)
         {
             Endian = endian;
             CurrentXORKey = 0;

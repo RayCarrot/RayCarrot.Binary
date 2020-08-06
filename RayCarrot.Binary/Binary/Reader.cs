@@ -17,7 +17,8 @@ namespace RayCarrot.Binary
         /// </summary>
         /// <param name="stream">The stream to read from</param>
         /// <param name="endian">The endianness to use when reading</param>
-        public Reader(Stream stream, Endian endian) : base(stream)
+        /// <param name="leaveOpen">Indicates if the stream should be left open after disposing the reader</param>
+        public Reader(Stream stream, Endian endian, bool leaveOpen = false) : base(stream, Encoding.Default, leaveOpen)
         {
             Endian = endian;
             CurrentXORKey = 0;
