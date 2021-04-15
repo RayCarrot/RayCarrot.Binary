@@ -109,9 +109,12 @@ namespace RayCarrot.Binary
             // Use byte writing method if it's a byte array
             if (typeof(T) == typeof(byte))
             {
-                string normalLog = $"{LogPrefix}({typeof(T)}[{length}]) {name ?? "<no name>"}: ";
-                Logger?.WriteLogLine($"{normalLog}{BinaryHelpers.ByteArrayToHexString((byte[])(object) array, 16, new string(' ', normalLog.Length))}");
-                
+                if (Logger != null)
+                {
+                    string normalLog = $"{LogPrefix}({typeof(T)}[{length}]) {name ?? "<no name>"}: ";
+                    Logger?.WriteLogLine($"{normalLog}{BinaryHelpers.ByteArrayToHexString((byte[])(object)array, 16, new string(' ', normalLog.Length))}");
+                }
+
                 Writer.Write((byte[])(object)array);
             }
             else
@@ -120,7 +123,7 @@ namespace RayCarrot.Binary
 
                 // Write every value
                 for (int i = 0; i < length; i++)
-                    Serialize<T>(array[i], name: name == null ? null : $"{name}[{i}]");
+                    Serialize<T>(array[i], name: name == null || Logger == null ? null : $"{name}[{i}]");
             }
 
             // Return the array
@@ -141,7 +144,7 @@ namespace RayCarrot.Binary
             V size = (V)Convert.ChangeType(array?.Length ?? 0, typeof(V));
 
             // Write the value using the serializer
-            Serialize<V>(size, name: name + ".Length");
+            Serialize<V>(size, name: Logger == null ? null : $"{name}.Length");
             
             // Return the array
             return array;
@@ -208,7 +211,7 @@ namespace RayCarrot.Binary
 
             // Write every value
             for (int i = 0; i < length; i++)
-                SerializeObject<T>(array[i], onPreSerializing: onPreSerializing, name: name == null ? null : $"{name}[{i}]");
+                SerializeObject<T>(array[i], onPreSerializing: onPreSerializing, name: name == null || Logger == null ? null : $"{name}[{i}]");
 
             // Return the array
             return array;

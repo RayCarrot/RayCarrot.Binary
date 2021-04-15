@@ -123,8 +123,11 @@ namespace RayCarrot.Binary
 
                 byte[] bytes = Reader.ReadBytes(length);
 
-                string normalLog = $"{logPrefix}({typeof(T)}[{length}]) {name ?? "<no name>"}: ";
-                Logger?.WriteLogLine($"{normalLog}{BinaryHelpers.ByteArrayToHexString(bytes, 16, new string(' ', normalLog.Length))}");
+                if (Logger != null)
+                {
+                    string normalLog = $"{logPrefix}({typeof(T)}[{length}]) {name ?? "<no name>"}: ";
+                    Logger?.WriteLogLine($"{normalLog}{BinaryHelpers.ByteArrayToHexString(bytes, 16, new string(' ', normalLog.Length))}");
+                }
 
                 return (T[])(object)bytes;
             }
@@ -137,7 +140,7 @@ namespace RayCarrot.Binary
             // Read each value to the buffer
             for (int i = 0; i < length; i++)
                 // Read the value
-                buffer[i] = Serialize<T>(default, name: name == null ? null : $"{name}[{i}]");
+                buffer[i] = Serialize<T>(default, name: name == null || Logger == null ? null : $"{name}[{i}]");
 
             // Return the buffer
             return buffer;
@@ -157,7 +160,7 @@ namespace RayCarrot.Binary
             V Size = default;
 
             // Serialize the size
-            Size = Serialize<V>(Size, name: name + ".Length");
+            Size = Serialize<V>(Size, name: Logger == null ? null : $"{name}.Length");
             
             // If the array is null, create it with the specified size
             if (array == null)
@@ -242,7 +245,7 @@ namespace RayCarrot.Binary
             // Read each object to the buffer
             for (int i = 0; i < length; i++)
                 // Read the object
-                buffer[i] = SerializeObject<T>(default, onPreSerializing: onPreSerializing, name: name == null ? null : $"{name}[{i}]");
+                buffer[i] = SerializeObject<T>(default, onPreSerializing: onPreSerializing, name: name == null || Logger == null ? null : $"{name}[{i}]");
 
             return buffer;
         }
