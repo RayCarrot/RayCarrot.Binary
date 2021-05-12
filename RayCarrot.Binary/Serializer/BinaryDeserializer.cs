@@ -289,7 +289,7 @@ namespace RayCarrot.Binary
         /// <summary>
         /// The log prefix to use when writing a log
         /// </summary>
-        protected string LogPrefix => Logger == null ? null : $"(READ) 0x{Stream.Position:X8}:{new string(' ', (Depth + 1) * 2)}";
+        protected string LogPrefix => Logger == null ? null : $"(R) 0x{Stream.Position:X8}:{new string(' ', (Depth + 1) * 2)}";
 
         /// <summary>
         /// The depths, for logging
