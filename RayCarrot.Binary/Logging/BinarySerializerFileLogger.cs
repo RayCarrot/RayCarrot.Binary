@@ -8,19 +8,22 @@ namespace RayCarrot.Binary
     public class BinarySerializerFileLogger : IBinarySerializerLogger
     {
         /// <summary>
-        /// Default constructor
+        /// Creates a new file logger which creates a new log file
         /// </summary>
         /// <param name="logPath">The log file path</param>
         public BinarySerializerFileLogger(string logPath)
         {
-            LogPath = logPath;
             FileStream = new StreamWriter(logPath);
         }
 
         /// <summary>
-        /// The log file path
+        /// Creates a new file logger from the stream
         /// </summary>
-        public string LogPath { get; }
+        /// <param name="stream">The log output stream</param>
+        public BinarySerializerFileLogger(Stream stream)
+        {
+            FileStream = new StreamWriter(stream);
+        }
 
         /// <summary>
         /// The file stream
