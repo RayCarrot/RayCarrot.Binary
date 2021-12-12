@@ -28,8 +28,13 @@ namespace RayCarrot.Binary
         /// <returns>The string value</returns>
         public static string SerializeLengthPrefixedString(this IBinarySerializer s, string value, string name = null)
         {
+            int length = 0;
+
+            if (value != null)
+                length = s.Settings.StringEncoding.GetByteCount(value);
+
             // Serialize the length
-            var length = s.Serialize<int>(value?.Length ?? 0, name: $"{name}.Length");
+            length = s.Serialize<int>(length, name: $"{name}.Length");
 
             // Serialize the string
             return s.SerializeString(value, length, name);
